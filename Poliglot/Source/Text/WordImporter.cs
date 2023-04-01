@@ -36,7 +36,7 @@ public class WordImporter
             .Where(w => wordBank.Words
             .All(w2 => w.Original != w2.Original));
 
-        // remove blocked words
+        // remove blocked words and sentences
         IEnumerable<Word> allowedWords = notSavedWords
             .Where(w => !blockedBank.Words.Contains(w.Original))
             .Where(w => !blockedBank.Sentenses.Contains(w.Context));
