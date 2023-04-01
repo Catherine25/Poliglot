@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Poliglot.MainPage"
+             xmlns:local="clr-namespace:Poliglot">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <local:WordDeskView x:Name="WordStack" Grid.Row="0" Grid.ColumnSpan="2" WidthRequest="200"/>
+        <Button x:Name="ImportButton" Text="Import Words" Margin="10" Grid.Row="1"/>
+        <Button x:Name="SaveProgressButton" Text="Save progress" Margin="10" Grid.Column="1" Grid.Row="1"/>
+    </Grid>
+</ContentPage>
