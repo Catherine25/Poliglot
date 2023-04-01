@@ -30,6 +30,12 @@ public partial class MainPage : ContentPage
 
         ImportButton.Clicked += ImportButton_Clicked;
         SaveProgressButton.Clicked += SaveProgressButton_Clicked;
+        BlockButton.Clicked += BlockButton_Clicked;
+    }
+
+    private void BlockButton_Clicked(object sender, EventArgs e)
+    {
+        throw new NotImplementedException();
     }
 
     private void WordStack_WordCompleted(bool completed)
@@ -73,8 +79,6 @@ public partial class MainPage : ContentPage
             .First();
 
         WordStack.Word = word;
-
-        WordStack.AddBlockButton();
     }
 }
 
