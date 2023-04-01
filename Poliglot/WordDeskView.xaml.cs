@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Poliglot.Source.Text;
 
 namespace Poliglot;
@@ -28,10 +29,19 @@ public partial class WordDeskView : ContentView
     {
         Debug.WriteLine($"Showing word '{word.Original}' in context '{word.Context}'");
 
-        var context = word.Context;
-        var mappedWords = context
-            .Split(' ') // todo use text processor
-            .Select(w => (w, w == word.Original ? word : null));
+        // for regex
+        var context = word.Context + '\n';
+
+        // for when word is at start
+        string patternPartUpper = word.Original.StartWithUpperCase();
+
+        string pattern = $"({patternPartUpper} | {word.Original} | {word.Original}[\\.,\\,\n])";
+
+        IEnumerable<string> sentenceParts = Regex.Split(context, pattern);
+        sentenceParts = sentenceParts.Where(p => p != string.Empty);
+
+        var mappedWords = sentenceParts
+            .Select(w => (w, w.Trim() == word.Original ? word : null));
 
         Body.Clear();
 
@@ -65,17 +75,6 @@ public partial class WordDeskView : ContentView
             Text = "No words to repeat! 🙂",
             HeightRequest = 100
         });
-    }
-
-    public void AddBlockButton()
-    {
-        Button blockButton = new()
-        {
-            Text = "❌",
-            HeightRequest = 100
-        };
-
-        Body.Add(blockButton);
     }
 
     public void Clear() => Body.Clear();
