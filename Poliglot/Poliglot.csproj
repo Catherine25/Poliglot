@@ -50,6 +50,7 @@
 
 	<ItemGroup>
 	  <None Remove="Progress.json" />
+	  <None Remove="Resources\Raw\Blocked.json" />
 	  <None Remove="Resources\Raw\Words.json" />
 	  <None Remove="Text.txt" />
 	</ItemGroup>
