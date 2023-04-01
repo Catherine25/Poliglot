@@ -13,21 +13,19 @@ public class Saver
         this.fileSaver = fileSaver;
     }
 
-    public async Task<bool> Save(string fileName, string contents)
+    public async void Save(string fileName, string contents)
     {
         var cts = new CancellationTokenSource();
         var buffer = Encoding.Default.GetBytes(contents);
         var stream = new MemoryStream(buffer);
 
-        FileSaverResult result = await fileSaver.SaveAsync(fileName, stream, cts.Token);
-
-        return result.IsSuccessful;
+        await fileSaver.SaveAsync(fileName, stream, cts.Token);
     }
 
-    public async Task<bool> Save(string fileName, object obj)
+    public void Save(string fileName, object obj)
     {
         string contents = JsonSerializer.Serialize(obj);
 
-        return await Save(fileName, contents);
+        Save(fileName, contents);
     }
 }

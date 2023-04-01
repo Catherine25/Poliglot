@@ -1,15 +1,5 @@
 ﻿namespace Poliglot.Source.Text;
 
-public class WordBank
-{
-    public IEnumerable<Word> Words { get; set; } = new List<Word>();
-
-    public void CompleteWord(Word word, bool correct)
-    {
-        Words.Single(w => w.Original == word.Original).Answered(correct);
-    }
-}
-
 public class Word
 {
     public string Original { get; set; }
@@ -48,13 +38,4 @@ public class Word
             RepeatTime = DateTime.UtcNow.AddMinutes(1);
         }
     }
-}
-
-public enum States
-{
-    New,
-    Seen,
-    Studying,
-    Recognized,
-    Known
 }

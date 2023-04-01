@@ -7,8 +7,11 @@ namespace Poliglot;
 public partial class MainPage : ContentPage
 {
     private const string WordsFileName = "Words.json";
+    private const string BlockedFileName = "Blocked.json";
 
     private WordBank wordBank;
+    private BlockedBank blockedBank;
+
     private Loader loader;
     private Saver saver;
     private TextProcessor textProcessor;
@@ -30,13 +33,13 @@ public partial class MainPage : ContentPage
 
         ImportButton.Clicked += ImportButton_Clicked;
         SaveProgressButton.Clicked += SaveProgressButton_Clicked;
-        BlockButton.Clicked += BlockButton_Clicked;
+        BlockWordButton.Clicked += BlockWordButton_Clicked;
+        BlockSentenceButton.Clicked += BlockSentenceButton_Clicked;
     }
 
-    private void BlockButton_Clicked(object sender, EventArgs e)
-    {
-        throw new NotImplementedException();
-    }
+    private void BlockWordButton_Clicked(object sender, EventArgs e) => wordBank.RemoveByWord(WordStack.Word.Original);
+
+    private void BlockSentenceButton_Clicked(object sender, EventArgs e) => wordBank.RemoveBySentence(WordStack.Word.Context);
 
     private void WordStack_WordCompleted(bool completed)
     {
@@ -45,22 +48,23 @@ public partial class MainPage : ContentPage
         ShowNextWord();
     }
 
-    private async void SaveProgressButton_Clicked(object sender, EventArgs e)
+    private void SaveProgressButton_Clicked(object sender, EventArgs e)
     {
-        _ = await saver.Save(WordsFileName, wordBank);
+        saver.Save(WordsFileName, wordBank);
     }
 
     private async void MainPage_AppearingAsync(object sender, EventArgs e)
     {
         // load known words
         wordBank = await loader.Load<WordBank>(WordsFileName);
+        blockedBank = await loader.Load<BlockedBank>(BlockedFileName);
 
         ShowNextWord();
     }
 
     private async void ImportButton_Clicked(object sender, EventArgs e)
     {
-        wordBank = await wordImporter.ImportInto(wordBank);
+        wordBank = await wordImporter.ImportInto(wordBank, blockedBank);
 
         ShowNextWord();
     }

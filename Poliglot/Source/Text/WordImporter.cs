@@ -17,7 +17,7 @@ public class WordImporter
         this.textProcessor = textProcessor;
     }
 
-    public async Task<WordBank> ImportInto(WordBank wordBank)
+    public async Task<WordBank> ImportInto(WordBank wordBank, BlockedBank blockedBank)
     {
         // load unknown words
         string text = await loader.Load(TextFileName);
@@ -35,6 +35,11 @@ public class WordImporter
         IEnumerable<Word> notSavedWords = newWordsInContext
             .Where(w => wordBank.Words
             .All(w2 => w.Original != w2.Original));
+
+        // remove blocked words
+        IEnumerable<Word> allowedWords = notSavedWords
+            .Where(w => !blockedBank.Words.Contains(w.Original))
+            .Where(w => !blockedBank.Sentenses.Contains(w.Context));
 
         // save new words changes
         var newWords = new List<Word>();
