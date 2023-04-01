@@ -9,14 +9,16 @@ public class Loader
         using var stream = await FileSystem.OpenAppPackageFileAsync(fileName);
         using var reader = new StreamReader(stream);
 
-        string result = reader.ReadToEnd();
-
-        return result.Replace("\\r", "");
+        return reader.ReadToEnd();
     }
 
     public async Task<T> Load<T>(string fileName)
     {
         var contents = await Load(fileName);
+
+        if (contents == string.Empty)
+            contents = "{}";
+
         return JsonSerializer.Deserialize<T>(contents);
     }
 }
