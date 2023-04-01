@@ -28,7 +28,8 @@ public class WordImporter
         // get words in context
         IEnumerable<Word> newWordsInContext = sentences
             .SelectMany(s => textProcessor.ExtractWords(s)
-            .Select(w => new Word(w, s)));
+            .Select(w => new Word(w, s)))
+            .DistinctBy(w => w.Original);
 
         // remove known words
         IEnumerable<Word> notSavedWords = newWordsInContext
