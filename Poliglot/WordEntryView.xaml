@@ -3,9 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Poliglot.WordEntryView">
     <Entry x:Name="Body"
-           HorizontalTextAlignment="Center"
+           HorizontalTextAlignment="Start"
            VerticalTextAlignment="Center"
-           HeightRequest = "100"
-           WidthRequest = "100">
+           HeightRequest = "100">
     </Entry>
 </ContentView>
