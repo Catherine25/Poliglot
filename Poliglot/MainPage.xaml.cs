@@ -55,6 +55,8 @@ public partial class MainPage : ContentPage
     private async void ImportButton_Clicked(object sender, EventArgs e)
     {
         wordBank = await wordImporter.ImportInto(wordBank);
+
+        ShowNextWord();
     }
 
     private void ShowNextWord()
@@ -69,7 +71,7 @@ public partial class MainPage : ContentPage
             .Where(w => w.ReadyToForRepeating()) // word can be studied
             .Where(w => w.Context != WordStack.Word?.Context) // sentence is not the same
             .First();
-        
+
         WordStack.Word = word;
 
         WordStack.AddBlockButton();
