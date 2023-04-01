@@ -16,7 +16,7 @@
             <Button x:Name="ImportButton" Text="Import Words" Margin="10"/>
             <Button x:Name="SaveProgressButton" Text="Save progress" Margin="10" Grid.Column="1"/>
             <Button x:Name="BlockWordButton" Text="Block Word" Margin="10" Grid.Column="2"/>
-            <Button x:Name="BlockSentenceButton" Text="Block Sentence" Margin="10" Grid.Column="2"/>
+            <Button x:Name="BlockSentenceButton" Text="Block Sentence" Margin="10" Grid.Column="3"/>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
