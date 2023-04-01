@@ -11,11 +11,11 @@ public class WordBank
 
     public void RemoveByWord(string word)
     {
-        Words = Words.Where(w => string.Equals(w.Original, word, StringComparison.OrdinalIgnoreCase));
+        Words = Words.Where(w => !string.Equals(w.Original, word, StringComparison.OrdinalIgnoreCase));
     }
 
     public void RemoveBySentence(string sentence)
     {
-        Words = Words.Where(w => string.Equals(w.Context, sentence, StringComparison.OrdinalIgnoreCase));
+        Words = Words.Where(w => !string.Equals(w.Context, sentence, StringComparison.OrdinalIgnoreCase));
     }
 }
