@@ -37,9 +37,19 @@ public partial class MainPage : ContentPage
         BlockSentenceButton.Clicked += BlockSentenceButton_Clicked;
     }
 
-    private void BlockWordButton_Clicked(object sender, EventArgs e) => wordBank.RemoveByWord(WordStack.Word.Original);
+    private void BlockWordButton_Clicked(object sender, EventArgs e)
+    {
+        wordBank.RemoveByWord(WordStack.Word.Original);
 
-    private void BlockSentenceButton_Clicked(object sender, EventArgs e) => wordBank.RemoveBySentence(WordStack.Word.Context);
+        ShowNextWord();
+    }
+
+    private void BlockSentenceButton_Clicked(object sender, EventArgs e)
+    {
+        wordBank.RemoveBySentence(WordStack.Word.Context);
+
+        ShowNextWord();
+    }
 
     private void WordStack_WordCompleted(bool completed)
     {
