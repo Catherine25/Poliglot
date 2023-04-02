@@ -4,7 +4,5 @@
              x:Class="Poliglot.WordEntryView">
     <Entry x:Name="Body"
            HorizontalTextAlignment="Start"
-           VerticalTextAlignment="Center"
-           HeightRequest = "100">
-    </Entry>
+           VerticalTextAlignment="Center"/>
 </ContentView>
