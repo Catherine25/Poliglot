@@ -36,8 +36,17 @@ public partial class MainPage : ContentPage
 
         ImportButton.Clicked += ImportButton_Clicked;
         SaveProgressButton.Clicked += SaveProgressButton_Clicked;
+        AddNoteEntry.Completed += AddNoteEntry_Completed;
         BlockWordButton.Clicked += BlockWordButton_Clicked;
         BlockSentenceButton.Clicked += BlockSentenceButton_Clicked;
+    }
+
+    private void AddNoteEntry_Completed(object sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(AddNoteEntry.Text))
+            return;
+
+        wordBank.AddNote(WordStack.Word, AddNoteEntry.Text);
     }
 
     private void BlockWordButton_Clicked(object sender, EventArgs e)
@@ -96,6 +105,7 @@ public partial class MainPage : ContentPage
             .SelectRandom();
 
         WordStack.Word = word;
+        AddNoteEntry.Text = word.Note;
     }
 }
 

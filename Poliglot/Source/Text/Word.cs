@@ -6,6 +6,7 @@ public class Word
     public string Context { get; set; }
     public States State { get; set; }
     public DateTime? RepeatTime { get; set; }
+    public string Note { get; set; }
 
     public Word(string original, string context, States state = States.New)
     {
@@ -38,4 +39,10 @@ public class Word
             RepeatTime = DateTime.UtcNow.AddMinutes(1);
         }
     }
+
+    public static bool operator ==(Word x, Word y) => string.Equals(x?.Original, y?.Original);
+    public static bool operator !=(Word x, Word y) => !(x == y);
+    public override bool Equals(object obj) => Original == obj.ToString();
+    public override int GetHashCode() => Original.GetHashCode();
+    public override string ToString() => Original;
 }

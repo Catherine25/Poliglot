@@ -18,4 +18,9 @@ public class WordBank
     {
         Words = Words.Where(w => !string.Equals(w.Context, sentence, StringComparison.OrdinalIgnoreCase));
     }
+
+    public void AddNote(Word word, string note)
+    {
+        Words.First(w => w == word).Note = note;
+    }
 }
