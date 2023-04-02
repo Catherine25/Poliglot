@@ -28,18 +28,49 @@ public partial class WordDeskView : ContentView
     {
         Debug.WriteLine($"Showing word '{word.Original}' in context '{word.Context}'");
 
-        // for regex
-        var context = word.Context;
+        var sentenceParts = ProduceWords(word.Context, word.Original);
 
-        IEnumerable<string> sentenceParts = context.Split(' ', '.', ',', '\n');
-        sentenceParts = sentenceParts.Where(p => p != string.Empty);
-
-        var mappedWords = sentenceParts
-            .Select(w => (w, w == word.Original ? word : null));
+        var mappedWords = sentenceParts 
+            .Select(w => (w, w.Contains(word.Original) ? word : null));
 
         Body.Clear();
 
         GenerateWordViewsForWord(mappedWords);
+    }
+
+    private IEnumerable<string> ProduceWords(string text, string studiedWord)
+    {
+        IEnumerable<string> wordsWithSeparators = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        wordsWithSeparators = wordsWithSeparators.SelectMany(word => EnsureNoSeparatorsInStudiedWord(word, studiedWord));
+
+        return wordsWithSeparators;
+    }
+
+    private IEnumerable<string> EnsureNoSeparatorsInStudiedWord(string currentWord, string studiedWord)
+    {
+        // if we are not studying the word - we do not care about the separators from it
+        if (currentWord != studiedWord)
+            return new string[] { currentWord };
+
+        // sentence separators collection
+        char[] separators = new char[] { '.', ',', '\n' };
+
+        // initialize result with the studied word
+        List<string> strings = new()
+        {
+            studiedWord
+        };
+
+        // search separators and create buttons for them separately
+        var index = studiedWord.IndexOfAny(separators);
+        while (index != -1)
+        {
+            strings.Add(studiedWord.Substring(index, 1));
+            index = studiedWord.IndexOfAny(separators, index + 1);
+        }
+
+        return strings;
     }
 
     public void GenerateWordViewsForWord(IEnumerable<(string contextWord, Word studiedWord)> mappedWords)
