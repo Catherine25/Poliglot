@@ -60,6 +60,7 @@ public partial class WordDeskView : ContentView
             else
             {
                 WordEntryView view = new(item.studiedWord);
+                view.HeightRequest = 50;
                 view.Completed += WordEntryView_Completed;
                 Body.Add(view);
             }
