@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui.Storage;
+using Poliglot.Source.Extensions;
 using Poliglot.Source.Storage;
 using Poliglot.Source.Text;
 
@@ -90,7 +91,7 @@ public partial class MainPage : ContentPage
         var word = wordBank.Words
             .Where(w => w.ReadyToForRepeating()) // word can be studied
             .Where(w => w.Context != WordStack.Word?.Context) // sentence is not the same
-            .First();
+            .SelectRandom();
 
         WordStack.Word = word;
     }
