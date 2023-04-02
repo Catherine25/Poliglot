@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
 using Poliglot.Source.Text;
 
 namespace Poliglot;
@@ -30,18 +29,13 @@ public partial class WordDeskView : ContentView
         Debug.WriteLine($"Showing word '{word.Original}' in context '{word.Context}'");
 
         // for regex
-        var context = word.Context + '\n';
+        var context = word.Context;
 
-        // for when word is at start
-        string patternPartUpper = word.Original.StartWithUpperCase();
-
-        string pattern = $"({patternPartUpper} | {word.Original} | {word.Original}[\\.,\\,\n])";
-
-        IEnumerable<string> sentenceParts = Regex.Split(context, pattern);
+        IEnumerable<string> sentenceParts = context.Split(' ', '.', ',', '\n');
         sentenceParts = sentenceParts.Where(p => p != string.Empty);
 
         var mappedWords = sentenceParts
-            .Select(w => (w, w.Trim() == word.Original ? word : null));
+            .Select(w => (w, w == word.Original ? word : null));
 
         Body.Clear();
 
@@ -52,13 +46,23 @@ public partial class WordDeskView : ContentView
     {
         foreach (var item in mappedWords)
         {
-            var view = item.studiedWord == null
-                ? new WordEntryView(item.contextWord)
-                : new WordEntryView(item.studiedWord);
+            if (item.studiedWord == null)
+            {
+                Button label = new()
+                {
+                    Text = item.contextWord,
+                    HeightRequest = 50,
+                    VerticalOptions = LayoutOptions.Center,
+                };
 
-            view.Completed += WordEntryView_Completed;
-
-            Body.Add(view);
+                Body.Add(label);
+            }
+            else
+            {
+                WordEntryView view = new(item.studiedWord);
+                view.Completed += WordEntryView_Completed;
+                Body.Add(view);
+            }
         }
     }
 
