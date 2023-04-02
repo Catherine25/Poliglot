@@ -73,6 +73,7 @@ public partial class MainPage : ContentPage
     private void SaveProgressButton_Clicked(object sender, EventArgs e)
     {
         saver.Save(WordsFileName, wordBank);
+        saver.Save(BlockedFileName, blockedBank);
     }
 
     private async void MainPage_AppearingAsync(object sender, EventArgs e)
