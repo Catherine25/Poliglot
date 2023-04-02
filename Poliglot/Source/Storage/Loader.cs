@@ -4,6 +4,13 @@ namespace Poliglot.Source.Storage;
 
 public class Loader
 {
+    private readonly SerializationOptions options;
+
+    public Loader(SerializationOptions serializationOptions)
+    {
+        this.options = serializationOptions;
+    }
+
     public async Task<string> Load(string fileName)
     {
         using var stream = await FileSystem.OpenAppPackageFileAsync(fileName);
@@ -19,6 +26,6 @@ public class Loader
         if (contents == string.Empty)
             contents = "{}";
 
-        return JsonSerializer.Deserialize<T>(contents);
+        return JsonSerializer.Deserialize<T>(contents, options.JsonSerializerOptions);
     }
 }

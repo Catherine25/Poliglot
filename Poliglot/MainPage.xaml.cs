@@ -23,8 +23,10 @@ public partial class MainPage : ContentPage
 		InitializeComponent();
 
         // todo DI
-        this.saver = new(fileSaver);
-        this.loader = new();
+        SerializationOptions options = new();
+
+        this.saver = new(fileSaver, options);
+        this.loader = new(options);
         this.textProcessor = new();
         this.wordImporter = new(loader, textProcessor);
 

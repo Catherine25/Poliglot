@@ -7,10 +7,12 @@ namespace Poliglot.Source.Storage;
 public class Saver
 {
     private readonly IFileSaver fileSaver;
+    private readonly SerializationOptions options;
 
-    public Saver(IFileSaver fileSaver)
+    public Saver(IFileSaver fileSaver, SerializationOptions serializationOptions)
     {
         this.fileSaver = fileSaver;
+        this.options = serializationOptions;
     }
 
     public async void Save(string fileName, string contents)
@@ -24,7 +26,7 @@ public class Saver
 
     public void Save(string fileName, object obj)
     {
-        string contents = JsonSerializer.Serialize(obj);
+        string contents = JsonSerializer.Serialize(obj, options.JsonSerializerOptions);
 
         Save(fileName, contents);
     }
