@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Storage;
 using Poliglot.Source.Extensions;
+using Poliglot.Source.Statistics;
 using Poliglot.Source.Storage;
 using Poliglot.Source.Text;
 
@@ -9,9 +10,11 @@ public partial class MainPage : ContentPage
 {
     private const string WordsFileName = "Words.json";
     private const string BlockedFileName = "Blocked.json";
+    private const string StatisticsFileName = "Statistics.json";
 
     private WordBank wordBank;
     private BlockedBank blockedBank;
+    private StatisticsBank statisticsBank;
 
     private Loader loader;
     private Saver saver;
@@ -66,6 +69,7 @@ public partial class MainPage : ContentPage
     private void WordStack_WordCompleted(bool completed)
     {
         wordBank.CompleteWord(WordStack.Word, completed);
+        StatisticsLabel.Text = statisticsBank.WordCompleted().ToString();
 
         ShowNextWord();
     }
@@ -74,13 +78,14 @@ public partial class MainPage : ContentPage
     {
         saver.Save(WordsFileName, wordBank);
         saver.Save(BlockedFileName, blockedBank);
+        saver.Save(StatisticsFileName, statisticsBank);
     }
 
     private async void MainPage_AppearingAsync(object sender, EventArgs e)
     {
-        // load known words
         wordBank = await loader.Load<WordBank>(WordsFileName);
         blockedBank = await loader.Load<BlockedBank>(BlockedFileName);
+        statisticsBank = await loader.Load<StatisticsBank>(StatisticsFileName);
 
         ShowNextWord();
     }
@@ -107,6 +112,7 @@ public partial class MainPage : ContentPage
 
         WordStack.Word = word;
         AddNoteEntry.Text = word.Note;
+        StatisticsLabel.Text = statisticsBank.TodayEntry().WordCount.ToString();
     }
 }
 

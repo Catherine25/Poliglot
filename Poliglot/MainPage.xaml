@@ -18,8 +18,10 @@
             <Entry x:Name="AddNoteEntry" Placeholder="Write a note" Margin="10" Grid.Column="2"/>
             <Button x:Name="BlockWordButton" Text="Block Word" Margin="10" Grid.Column="3"/>
             <Button x:Name="BlockSentenceButton" Text="Block Sentence" Margin="10" Grid.Column="4"/>
+            <Button x:Name="StatisticsLabel" Margin="10" Grid.Column="5"/>
 
             <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
