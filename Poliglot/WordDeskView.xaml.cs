@@ -56,7 +56,7 @@ public partial class WordDeskView : ContentView
         }
 
         resultingMatches = PrependFirst(studiedMatches, text).ToList();
-        resultingMatches = AppendLast(text, studiedMatches).ToList();
+        resultingMatches = AppendLast(text, resultingMatches).ToList();
 
         IEnumerable<string> extractedWords = matchCollection.Select(w => w.Value);
 
