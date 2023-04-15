@@ -31,7 +31,7 @@ public partial class WordDeskView : ContentView
 
         var sentenceParts = ProduceWords(word.Context, word.Original);
 
-        var mappedWords = sentenceParts 
+        var mappedWords = sentenceParts
             .Select(w => (w.Value, w.Value == word.Original ? word : null));
 
         Body.Clear();
@@ -76,69 +76,39 @@ public partial class WordDeskView : ContentView
         return new List<MyMatch> { match1, match2, new MyMatch(start, end, text.Substring(start, end - start)) };
     }
 
-    private static IEnumerable<MyMatch> AppendLast(string text, IEnumerable<MyMatch> studiedMatches)
+    private static IEnumerable<MyMatch> AppendLast(string text, IEnumerable<MyMatch> matches)
     {
-        var lastMatch = studiedMatches.Last();
-        int lastIndex = lastMatch.Index;
-        int length = lastMatch.Length;
-        int firstIndexAfterLastWordEnds = lastIndex + length;
+        var lastMatch = matches.Last();
 
-        if (firstIndexAfterLastWordEnds != text.Length)
+        int newWordIndex = lastMatch.Index + lastMatch.Length;
+        int newWordLength = text.Length - newWordIndex;
+
+        if (newWordIndex != text.Length)
         {
-            studiedMatches = studiedMatches.Append(new MyMatch(firstIndexAfterLastWordEnds, text.Length - firstIndexAfterLastWordEnds, text.Substring(firstIndexAfterLastWordEnds, text.Length - firstIndexAfterLastWordEnds)));
+            MyMatch match = new(
+                newWordIndex,
+                newWordLength,
+                text.Substring(newWordIndex, newWordLength)
+            );
+
+            matches = matches.Append(match);
         }
 
-        return studiedMatches;
+        return matches;
     }
 
-    private IEnumerable<MyMatch> PrependFirst(IEnumerable<MyMatch> myMatches, string text)
+    private IEnumerable<MyMatch> PrependFirst(IEnumerable<MyMatch> matches, string text)
     {
-        var firstMatch = myMatches.First();
-        
+        var firstMatch = matches.First();
+
         if (firstMatch.Index != 0)
-            myMatches = myMatches.Prepend(new MyMatch(0, firstMatch.Index, text.Substring(0, firstMatch.Index)));
+        {
+            MyMatch element = new(0, firstMatch.Index, text.Substring(0, firstMatch.Index));
+            matches = matches.Prepend(element);
+        }
 
-        return myMatches;
+        return matches;
     }
-
-    private IEnumerable<string> EnsureNoSeparatorsInStudiedWord(string currentWord, string studiedWord)
-    {
-        throw new Exception();
-        //List<string> strings = new List<string>();
-
-        //// sentence separators collection
-        //string[] seeked = new string[] { studiedWord, ",", "?", "(", ")", "/", "=", ":", "-", "„", "“" };
-
-        //// search separators and create buttons for them separately
-        //foreach (var item in seeked)
-        //{
-        //    var index = currentWord.IndexOf(item);
-
-        //    while (index != -1)
-        //    {
-        //        strings.Add(currentWord.Substring(index, item.Length));
-        //        index = currentWord.IndexOf(item, index + 1);
-        //    }
-        //}
-
-        //Debug.WriteLine($"returning strings {string.Join(' ', strings)}");
-        
-        //if(strings.Contains(studiedWord))
-        //    return strings;
-
-        //return new List<string>() { currentWord };;
-    }
-
-    //private object IndexesOfSeparators(string currentWord, object o)
-    //{
-    //    Regex.Match(currentWord, "[a-zA-Z]");
-
-    //    string[] separators = new string[] { ",", "?", "(", ")", "/", "=", ":", "-", "„", "“" };
-    //    separators.Select(s => currentWord.IndexOfAny());
-    //    foreach (var s in separators)
-    //    {
-    //    }
-    //}
 
     public void GenerateWordViewsForWord(IEnumerable<(string contextWord, Word studiedWord)> mappedWords)
     {
@@ -151,6 +121,7 @@ public partial class WordDeskView : ContentView
                     Text = item.contextWord,
                     HeightRequest = 50,
                     VerticalOptions = LayoutOptions.Center,
+                    BackgroundColor = Colors.BlueViolet.WithAlpha(0.5f)
                 };
 
                 Body.Add(label);
