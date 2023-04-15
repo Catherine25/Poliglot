@@ -9,6 +9,6 @@ public class TextProcessor
 
     public string[] ExtractWords(string sentence)
     {
-        return sentence.Split(new char[]{' ', ','}, StringSplitOptions.RemoveEmptyEntries);
+        return sentence.Split(new char[]{' ', ',', '?', '(', ')', '/', '=', ':', '-'}, StringSplitOptions.RemoveEmptyEntries);
     }
 }
