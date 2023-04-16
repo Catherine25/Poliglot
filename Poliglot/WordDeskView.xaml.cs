@@ -29,10 +29,13 @@ public partial class WordDeskView : ContentView
     {
         Debug.WriteLine($"Showing word '{word.Original}' in context '{word.Context}'");
 
-        var sentenceParts = ProduceWords(word.Context, word.Original);
+        var sentenceParts = ProduceWords(word.Context, word.Original).Select(s => s.Value);
 
-        var mappedWords = sentenceParts
-            .Select(w => (w.Value, w.Value == word.Original ? word : null));
+        var longSentenceSplitter = new LongSentenceSplitter();
+        var shortened = sentenceParts.SelectMany(s => longSentenceSplitter.SplitBy(s, ','));
+
+        var mappedWords = shortened
+            .Select(w => (w, w == word.Original ? word : null));
 
         Body.Clear();
 
