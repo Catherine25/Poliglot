@@ -4,18 +4,39 @@ public class LongSentenceSplitter
 {
     public const int MaxSize = 100;
 
-    public IEnumerable<string> SplitBy(string sentence, char character)
+    public IEnumerable<string> SplitSentence(string sentence, char character)
     {
-        if (sentence.Length > MaxSize)
-        {
-            int index = sentence.LastIndexOf(character) + 1;
+        if (CanContinue(sentence, character))
+            return new List<string> { sentence };
 
-            string first = sentence[..index];
-            string second = sentence[index..];
+        var parts = GetParts(sentence, character);
 
-            return new List<string> { first, second };
-        }
+        var result = new List<string>();
 
-        return new List<string> { sentence };
+        if (!string.IsNullOrEmpty(parts.first))
+            result.AddRange(SplitSentence(parts.first, character));
+
+        if (!string.IsNullOrEmpty(parts.second))
+            result.AddRange(SplitSentence(parts.second, character));
+
+        return result;
+    }
+
+    private bool CanContinue(string sentence, char character)
+    {
+        return sentence.Length < MaxSize || !sentence.Contains(character);
+    }
+
+    private (string first, string second) GetParts(string sentence, char character)
+    {
+        int index = sentence.IndexOf(character) + 1;
+
+        string first = sentence[..index];
+
+        index++;
+
+        string second = sentence[index..];
+
+        return (first, second);
     }
 }

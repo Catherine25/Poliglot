@@ -32,7 +32,7 @@ public partial class WordDeskView : ContentView
         var sentenceParts = ProduceWords(word.Context, word.Original).Select(s => s.Value);
 
         var longSentenceSplitter = new LongSentenceSplitter();
-        var shortened = sentenceParts.SelectMany(s => longSentenceSplitter.SplitBy(s, ','));
+        var shortened = sentenceParts.SelectMany(s => longSentenceSplitter.SplitSentence(s, ','));
 
         var mappedWords = shortened
             .Select(w => (w, w == word.Original ? word : null));
