@@ -42,7 +42,7 @@ public partial class WordEntryView : ContentView
         }
         else
         {
-            var correct = word.Original == Body.Text;
+            var correct = string.Equals(word.Original, Body.Text, StringComparison.OrdinalIgnoreCase);
 
             if (!correct)
             {

@@ -73,7 +73,7 @@ public partial class WordDeskView : ContentView
         int start = match1.Index + match1.Length;
         int end = match2.Index;
 
-        return new List<MyMatch> { match1, match2, new MyMatch(start, end, text.Substring(start, end - start)) };
+        return new List<MyMatch> { match1, match2, new MyMatch(start, end, text[start..end]) };
     }
 
     private static IEnumerable<MyMatch> AppendLast(string text, IEnumerable<MyMatch> matches)
@@ -128,8 +128,11 @@ public partial class WordDeskView : ContentView
             }
             else
             {
-                WordEntryView view = new(item.studiedWord);
-                view.HeightRequest = 50;
+                WordEntryView view = new(item.studiedWord)
+                {
+                    HeightRequest = 50
+                };
+
                 view.Completed += WordEntryView_Completed;
                 Body.Add(view);
             }
