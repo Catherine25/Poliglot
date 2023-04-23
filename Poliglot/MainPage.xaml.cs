@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui.Storage;
+using Poliglot.Source;
 using Poliglot.Source.Extensions;
 using Poliglot.Source.Statistics;
 using Poliglot.Source.Storage;
@@ -11,10 +12,12 @@ public partial class MainPage : ContentPage
     private const string WordsFileName = "Words.json";
     private const string BlockedFileName = "Blocked.json";
     private const string StatisticsFileName = "Statistics.json";
+    private const string SentenceTranslationsBankFileName = "SentenceTranslations.json";
 
     private WordBank wordBank;
     private BlockedBank blockedBank;
     private StatisticsBank statisticsBank;
+    private SentenceTranslationsBank sentenceTranslationsBank;
 
     private Loader loader;
     private Saver saver;
@@ -39,17 +42,26 @@ public partial class MainPage : ContentPage
 
         ImportButton.Clicked += ImportButton_Clicked;
         SaveProgressButton.Clicked += SaveProgressButton_Clicked;
-        AddNoteEntry.Completed += AddNoteEntry_Completed;
+        SentenceTransationEntry.Completed += SentenceTransationEntry_Completed;
+        NoteEntry.Completed += NoteEntry_Completed;
         BlockWordButton.Clicked += BlockWordButton_Clicked;
         BlockSentenceButton.Clicked += BlockSentenceButton_Clicked;
     }
 
-    private void AddNoteEntry_Completed(object sender, EventArgs e)
+    private void SentenceTransationEntry_Completed(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(AddNoteEntry.Text))
+        if (string.IsNullOrEmpty(SentenceTransationEntry.Text))
             return;
 
-        wordBank.AddNote(WordStack.Word, AddNoteEntry.Text);
+        sentenceTranslationsBank.SentencesWithTranslations.Add(WordStack.Word.Context, SentenceTransationEntry.Text);
+    }
+
+    private void NoteEntry_Completed(object sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(NoteEntry.Text))
+            return;
+
+        wordBank.AddNote(WordStack.Word, NoteEntry.Text);
     }
 
     private void BlockWordButton_Clicked(object sender, EventArgs e)
@@ -67,7 +79,7 @@ public partial class MainPage : ContentPage
         string sentence = WordStack.Word.Context;
 
         wordBank.RemoveBySentence(sentence);
-        blockedBank.Sentenses.Add(sentence);
+        blockedBank.Sentences.Add(sentence);
 
         ShowNextWord();
     }
@@ -85,6 +97,7 @@ public partial class MainPage : ContentPage
         saver.Save(WordsFileName, wordBank);
         saver.Save(BlockedFileName, blockedBank);
         saver.Save(StatisticsFileName, statisticsBank);
+        saver.Save(SentenceTranslationsBankFileName, sentenceTranslationsBank);
     }
 
     private async void MainPage_AppearingAsync(object sender, EventArgs e)
@@ -92,6 +105,7 @@ public partial class MainPage : ContentPage
         wordBank = await loader.Load<WordBank>(WordsFileName);
         blockedBank = await loader.Load<BlockedBank>(BlockedFileName);
         statisticsBank = await loader.Load<StatisticsBank>(StatisticsFileName);
+        sentenceTranslationsBank = await loader.Load<SentenceTranslationsBank>(SentenceTranslationsBankFileName);
 
         ShowNextWord();
     }
@@ -130,7 +144,13 @@ public partial class MainPage : ContentPage
 
         WordProgress.State = word.State;
         WordStack.Word = word;
-        AddNoteEntry.Text = word.Note;
+
+        SentenceTransationEntry.Text =
+            sentenceTranslationsBank.SentencesWithTranslations.ContainsKey(word.Context)
+            ? sentenceTranslationsBank.SentencesWithTranslations[word.Context]
+            : string.Empty;
+        
+        NoteEntry.Text = word.Note;
         StatisticsLabel.Text = statisticsBank.TodayEntry().WordCount.ToString();
     }
 }

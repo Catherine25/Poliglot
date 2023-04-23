@@ -18,23 +18,14 @@
 
         <local:WordDeskView x:Name="WordStack" Grid.Row="1" Grid.ColumnSpan="2" Margin="10"/>
 
-        <Grid Grid.Row="2" Margin="25">
-
-            <Button x:Name="ImportButton" Text="Import Words"/>
-            <Button x:Name="SaveProgressButton" Text="Save progress" Grid.Column="1"/>
-            <Entry x:Name="AddNoteEntry" Placeholder="Write a note" Grid.Column="2"/>
-            <Button x:Name="BlockWordButton" Text="Block Word" Grid.Column="3"/>
-            <Button x:Name="BlockSentenceButton" Text="Block Sentence" Grid.Column="4"/>
-            <Button x:Name="StatisticsLabel" Grid.Column="5"/>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-        </Grid>
+        <HorizontalStackLayout Grid.Row="2" Margin="25">
+            <Button x:Name="ImportButton" Text="Import Words" />
+            <Button x:Name="SaveProgressButton" Text="Save progress"/>
+            <Entry x:Name="SentenceTransationEntry" Placeholder="Write sentence transation"/>
+            <Entry x:Name="NoteEntry" Placeholder="Write a note"/>
+            <Button x:Name="BlockWordButton" Text="Block Word"/>
+            <Button x:Name="BlockSentenceButton" Text="Block Sentence"/>
+            <Button x:Name="StatisticsLabel"/>
+        </HorizontalStackLayout>
     </Grid>
 </ContentPage>
