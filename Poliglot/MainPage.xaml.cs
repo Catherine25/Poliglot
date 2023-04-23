@@ -54,14 +54,20 @@ public partial class MainPage : ContentPage
 
     private void BlockWordButton_Clicked(object sender, EventArgs e)
     {
-        wordBank.RemoveByWord(WordStack.Word.Original);
+        string word = WordStack.Word.Original;
+
+        wordBank.RemoveByWord(word);
+        blockedBank.Words.Add(word);
 
         ShowNextWord();
     }
 
     private void BlockSentenceButton_Clicked(object sender, EventArgs e)
     {
-        wordBank.RemoveBySentence(WordStack.Word.Context);
+        string sentence = WordStack.Word.Context;
+
+        wordBank.RemoveBySentence(sentence);
+        blockedBank.Sentenses.Add(sentence);
 
         ShowNextWord();
     }
@@ -101,15 +107,28 @@ public partial class MainPage : ContentPage
     {
         if (!wordBank.Words.Any())
         {
+            WordsAvailableBt.Text = "0";
             WordStack.ShowNoWords();
             return;
         }
 
-        var word = wordBank.Words
+        var wordsReadyForRepeating = wordBank.Words
             .Where(w => w.ReadyToForRepeating()) // word can be studied
-            .Where(w => w.Context != WordStack.Word?.Context) // sentence is not the same
-            .SelectRandom();
+            .OrderByDescending(w => w.State) // first repeat most known
+            .OrderBy(w => w.Context != WordStack.Word?.Context); // show words with different sentence from the previous one to not spoil the word to the user
 
+        if (!wordsReadyForRepeating.Any())
+        {
+            WordsAvailableBt.Text = "0";
+            WordStack.ShowNoWords();
+            return;
+        }
+
+        WordsAvailableBt.Text = wordsReadyForRepeating.Count().ToString();
+
+        var word = wordsReadyForRepeating.SelectRandom();
+
+        WordProgress.State = word.State;
         WordStack.Word = word;
         AddNoteEntry.Text = word.Note;
         StatisticsLabel.Text = statisticsBank.TodayEntry().WordCount.ToString();

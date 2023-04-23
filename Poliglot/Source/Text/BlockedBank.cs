@@ -2,6 +2,6 @@
 
 public class BlockedBank
 {
-    public List<string> Words { get; set; }
-    public List<string> Sentenses { get; set; }
+    public List<string> Words { get; set; } = new List<string>();
+    public List<string> Sentenses { get; set; } = new List<string>();
 }

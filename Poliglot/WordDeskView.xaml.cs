@@ -150,7 +150,7 @@ public partial class WordDeskView : ContentView
     public void ShowNoWords()
 	{
         Body.Clear();
-        Body.Add(new Label()
+        Body.Add(new Button()
         {
             Text = "No words to repeat! 🙂",
             HeightRequest = 100

@@ -5,20 +5,27 @@
              xmlns:local="clr-namespace:Poliglot">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
             <RowDefinition/>
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <local:WordDeskView x:Name="WordStack" Grid.ColumnSpan="2" Margin="10"/>
+        <HorizontalStackLayout Margin="25">
+            <local:WordProgressView x:Name="WordProgress"/>
+            <Button Text="Words available:"/>
+            <Button x:Name="WordsAvailableBt"/>
+        </HorizontalStackLayout>
 
-        <Grid Grid.Row="1">
+        <local:WordDeskView x:Name="WordStack" Grid.Row="1" Grid.ColumnSpan="2" Margin="10"/>
 
-            <Button x:Name="ImportButton" Text="Import Words" Margin="10"/>
-            <Button x:Name="SaveProgressButton" Text="Save progress" Margin="10" Grid.Column="1"/>
-            <Entry x:Name="AddNoteEntry" Placeholder="Write a note" Margin="10" Grid.Column="2"/>
-            <Button x:Name="BlockWordButton" Text="Block Word" Margin="10" Grid.Column="3"/>
-            <Button x:Name="BlockSentenceButton" Text="Block Sentence" Margin="10" Grid.Column="4"/>
-            <Button x:Name="StatisticsLabel" Margin="10" Grid.Column="5"/>
+        <Grid Grid.Row="2" Margin="25">
+
+            <Button x:Name="ImportButton" Text="Import Words"/>
+            <Button x:Name="SaveProgressButton" Text="Save progress" Grid.Column="1"/>
+            <Entry x:Name="AddNoteEntry" Placeholder="Write a note" Grid.Column="2"/>
+            <Button x:Name="BlockWordButton" Text="Block Word" Grid.Column="3"/>
+            <Button x:Name="BlockSentenceButton" Text="Block Sentence" Grid.Column="4"/>
+            <Button x:Name="StatisticsLabel" Grid.Column="5"/>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
