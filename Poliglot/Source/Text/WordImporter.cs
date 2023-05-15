@@ -1,4 +1,5 @@
-﻿using Poliglot.Source.Storage;
+﻿using Poliglot.Source.Database;
+using Poliglot.Source.Storage;
 
 namespace Poliglot.Source.Text;
 
@@ -17,7 +18,7 @@ public class WordImporter
         this.textProcessor = textProcessor;
     }
 
-    public async Task<WordBank> ImportInto(WordBank wordBank, BlockedBank blockedBank)
+    public async Task<IEnumerable<(string word, string sentence)>> ImportInto(IEnumerable<WordDbItem> wordDbItems, IEnumerable<SentenceDbItem> sentenceDbItems)
     {
         // load unknown words
         string text = await loader.Load(TextFileName);
@@ -26,27 +27,20 @@ public class WordImporter
         var sentences = textProcessor.ExtractSentences(text);
 
         // get words in context
-        IEnumerable<Word> newWordsInContext = sentences
-            .SelectMany(s => textProcessor.ExtractWords(s)
-            .Select(w => new Word(w, s)))
-            .DistinctBy(w => w.Original);
+        IEnumerable<(string word, string sentence)> newWordsInContext = sentences
+            .SelectMany(sentence => textProcessor.ExtractWords(sentence)
+            .Select(word => (word, sentence)))
+            .DistinctBy(x => x.word);
 
         // remove known words
-        IEnumerable<Word> notSavedWords = newWordsInContext
-            .Where(w => wordBank.Words
-            .All(w2 => w.Original != w2.Original));
+        IEnumerable<(string word, string sentence)> notSavedWords = newWordsInContext
+            .Where(w => wordDbItems
+            .All(w2 => w.word != w2.Word));
 
-        // remove blocked words and sentences
-        IEnumerable<Word> allowedWords = notSavedWords
-            .Where(w => !blockedBank.Words.Contains(w.Original))
-            .Where(w => !blockedBank.Sentences.Contains(w.Context));
+        // remove known sentences
+        IEnumerable<(string word, string sentence)> allowedWords = notSavedWords
+            .Where(w => !sentenceDbItems.Any(s => s.Blocked || w.sentence == s.Sentence));
 
-        // save new words changes
-        var newWords = new List<Word>();
-        newWords.AddRange(wordBank.Words);
-        newWords.AddRange(notSavedWords);
-        wordBank.Words = newWords;
-
-        return wordBank;
+        return notSavedWords;
     }
 }

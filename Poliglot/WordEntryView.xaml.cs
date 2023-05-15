@@ -6,7 +6,7 @@ public partial class WordEntryView : ContentView
 {
     public Action<bool> Completed;
 
-    private readonly Word word;
+    private readonly WordInContext word;
     private bool? answered;
     private bool hadMistake = false;
 
@@ -23,7 +23,7 @@ public partial class WordEntryView : ContentView
         Body.Text = word;
     }
 
-    public WordEntryView(Word word)
+    public WordEntryView(WordInContext word)
     {
         this.word = word;
 

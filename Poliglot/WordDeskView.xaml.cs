@@ -8,7 +8,7 @@ public partial class WordDeskView : ContentView
 {
     public Action<bool> WordCompleted;
 
-    public Word Word
+    public WordInContext Word
     {
         get => word;
         set
@@ -18,7 +18,7 @@ public partial class WordDeskView : ContentView
         }
     }
 
-    private Word word;
+    private WordInContext word;
 
 	public WordDeskView()
 	{
@@ -113,7 +113,7 @@ public partial class WordDeskView : ContentView
         return matches;
     }
 
-    public void GenerateWordViewsForWord(IEnumerable<(string contextWord, Word studiedWord)> mappedWords)
+    public void GenerateWordViewsForWord(IEnumerable<(string contextWord, WordInContext studiedWord)> mappedWords)
     {
         foreach (var item in mappedWords)
         {

@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Maui.Storage;
-using Poliglot.Source;
+using Poliglot.Source.Database;
+using Poliglot.Source.Database.Base;
 using Poliglot.Source.Extensions;
-using Poliglot.Source.Statistics;
 using Poliglot.Source.Storage;
 using Poliglot.Source.Text;
 
@@ -9,39 +9,30 @@ namespace Poliglot;
 
 public partial class MainPage : ContentPage
 {
-    private const string WordsFileName = "Words.json";
-    private const string BlockedFileName = "Blocked.json";
-    private const string StatisticsFileName = "Statistics.json";
-    private const string SentenceTranslationsBankFileName = "SentenceTranslations.json";
-
-    private WordBank wordBank;
-    private BlockedBank blockedBank;
-    private StatisticsBank statisticsBank;
-    private SentenceTranslationsBank sentenceTranslationsBank;
-
     private Loader loader;
-    private Saver saver;
     private TextProcessor textProcessor;
     private WordImporter wordImporter;
 
-    public MainPage(IFileSaver fileSaver)
+    private readonly PoliglotDatabase poliglotDatabase;
+
+    public MainPage(IFileSaver fileSaver, PoliglotDatabase poliglotDatabase)
 	{
 		InitializeComponent();
 
         // todo DI
         SerializationOptions options = new();
 
-        this.saver = new(fileSaver, options);
         this.loader = new(options);
         this.textProcessor = new();
         this.wordImporter = new(loader, textProcessor);
+
+        this.poliglotDatabase = poliglotDatabase;
 
         WordStack.WordCompleted += WordStack_WordCompleted;
 
         Appearing += MainPage_AppearingAsync;
 
         ImportButton.Clicked += ImportButton_Clicked;
-        SaveProgressButton.Clicked += SaveProgressButton_Clicked;
         SentenceTransationEntry.Completed += SentenceTransationEntry_Completed;
         NoteEntry.Completed += NoteEntry_Completed;
         BlockWordButton.Clicked += BlockWordButton_Clicked;
@@ -50,86 +41,109 @@ public partial class MainPage : ContentPage
 
     private void SentenceTransationEntry_Completed(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(SentenceTransationEntry.Text))
+        var text = SentenceTransationEntry.Text;
+
+        if (string.IsNullOrEmpty(text))
             return;
 
-        sentenceTranslationsBank.SentencesWithTranslations.Add(WordStack.Word.Context, SentenceTransationEntry.Text);
+        WordStack.Word.SentenceNote = text;
     }
 
-    private void NoteEntry_Completed(object sender, EventArgs e)
+    private async void NoteEntry_Completed(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(NoteEntry.Text))
+        var text = NoteEntry.Text;
+
+        if (string.IsNullOrEmpty(text))
             return;
 
-        wordBank.AddNote(WordStack.Word, NoteEntry.Text);
+        WordStack.Word.Note = text;
     }
 
     private void BlockWordButton_Clicked(object sender, EventArgs e)
     {
-        string word = WordStack.Word.Original;
-
-        wordBank.RemoveByWord(word);
-        blockedBank.Words.Add(word);
-
+        WordStack.Word.WordBlocked = true;
         ShowNextWord();
     }
 
     private void BlockSentenceButton_Clicked(object sender, EventArgs e)
     {
-        string sentence = WordStack.Word.Context;
-
-        wordBank.RemoveBySentence(sentence);
-        blockedBank.Sentences.Add(sentence);
-
+        WordStack.Word.SentenceBlocked = true;
         ShowNextWord();
     }
 
     private void WordStack_WordCompleted(bool completed)
     {
-        wordBank.CompleteWord(WordStack.Word, completed);
-        StatisticsLabel.Text = statisticsBank.WordCompleted().ToString();
+        WordStack.Word.Answered(completed);
+
+        //StatisticsLabel.Text = statisticsBank.WordCompleted().ToString();
 
         ShowNextWord();
-    }
-
-    private void SaveProgressButton_Clicked(object sender, EventArgs e)
-    {
-        saver.Save(WordsFileName, wordBank);
-        saver.Save(BlockedFileName, blockedBank);
-        saver.Save(StatisticsFileName, statisticsBank);
-        saver.Save(SentenceTranslationsBankFileName, sentenceTranslationsBank);
     }
 
     private async void MainPage_AppearingAsync(object sender, EventArgs e)
     {
-        wordBank = await loader.Load<WordBank>(WordsFileName);
-        blockedBank = await loader.Load<BlockedBank>(BlockedFileName);
-        statisticsBank = await loader.Load<StatisticsBank>(StatisticsFileName);
-        sentenceTranslationsBank = await loader.Load<SentenceTranslationsBank>(SentenceTranslationsBankFileName);
-
         ShowNextWord();
     }
 
+    // todo
     private async void ImportButton_Clicked(object sender, EventArgs e)
     {
-        wordBank = await wordImporter.ImportInto(wordBank, blockedBank);
+        var oldWords = await poliglotDatabase.GetItemsAsync<WordDbItem>();
+        var oldSentences = await poliglotDatabase.GetItemsAsync<SentenceDbItem>();
+
+        var wordsInContext = await wordImporter.ImportInto(oldWords, oldSentences); //wordBank, blockedBank);
+        var itemsInContext = new List<WordInContext>();
+
+        // save sentences
+        foreach (var wordInContext in wordsInContext)
+        {
+            // extract sentence if
+            var sentenceItem = await poliglotDatabase.GetItemAsync<SentenceDbItem>(x => x.Sentence == wordInContext.sentence);
+
+            if (sentenceItem == null)
+            {
+                sentenceItem = new()
+                {
+                    Sentence = wordInContext.sentence
+                };
+
+                await poliglotDatabase.SaveItemAsync(sentenceItem);
+            }
+
+            var wordItem = new WordDbItem()
+            {
+                Word = wordInContext.word,
+                SentenceId = sentenceItem.Id,
+                State = States.New,
+            };
+
+            await poliglotDatabase.SaveItemAsync(wordItem);
+        }
 
         ShowNextWord();
     }
 
-    private void ShowNextWord()
+    private async void ShowNextWord()
     {
-        if (!wordBank.Words.Any())
+        if (! await poliglotDatabase.Any<WordDbItem>())
         {
             WordsAvailableBt.Text = "0";
             WordStack.ShowNoWords();
             return;
         }
 
-        var wordsReadyForRepeating = wordBank.Words
-            .Where(w => w.ReadyToForRepeating()) // word can be studied
-            .OrderByDescending(w => w.State) // first repeat most known
-            .OrderBy(w => w.Context != WordStack.Word?.Context); // show words with different sentence from the previous one to not spoil the word to the user
+        if(WordStack.Word != null)
+        {
+            var wordDbItem = WordStack.Word.wordDbItem;
+            if(wordDbItem != null)
+                poliglotDatabase.SaveItemAsync(wordDbItem);
+
+            var sentenceDbItem = WordStack.Word.sentenceDbItem;
+            if(sentenceDbItem != null)
+                poliglotDatabase.SaveItemAsync(sentenceDbItem);
+        }
+
+        var wordsReadyForRepeating = await poliglotDatabase.GetWordsReadyForRepeating(WordStack.Word?.Context);
 
         if (!wordsReadyForRepeating.Any())
         {
@@ -145,13 +159,9 @@ public partial class MainPage : ContentPage
         WordProgress.State = word.State;
         WordStack.Word = word;
 
-        SentenceTransationEntry.Text =
-            sentenceTranslationsBank.SentencesWithTranslations.ContainsKey(word.Context)
-            ? sentenceTranslationsBank.SentencesWithTranslations[word.Context]
-            : string.Empty;
-        
+        SentenceTransationEntry.Text = word.SentenceNote;
         NoteEntry.Text = word.Note;
-        StatisticsLabel.Text = statisticsBank.TodayEntry().WordCount.ToString();
+        //StatisticsLabel.Text = statisticsBank.TodayEntry().WordCount.ToString();
     }
 }
 

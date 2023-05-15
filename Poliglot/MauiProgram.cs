@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Storage;
 using Microsoft.Extensions.Logging;
+using Poliglot.Source.Database.Base;
 
 namespace Poliglot;
 
@@ -15,6 +16,8 @@ public static class MauiProgram
 
 		builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
 		builder.Services.AddTransient<MainPage>();
+
+        builder.Services.AddSingleton<PoliglotDatabase>();
 
 #if DEBUG
         builder.Logging.AddDebug();
