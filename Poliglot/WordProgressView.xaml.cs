@@ -4,9 +4,6 @@ namespace Poliglot;
 
 public partial class WordProgressView : ContentView
 {
-	private readonly SolidColorBrush disabledBrush = new(Colors.Gray);
-	private readonly SolidColorBrush enabledBrush = new(Colors.Red);
-
     public States State
 	{
 		get => states;
@@ -14,7 +11,7 @@ public partial class WordProgressView : ContentView
 		{
 			states = value;
 			DisableAll();
-			stateButtonMapping[states].Background = enabledBrush;
+			stateButtonMapping[states].IsActive = true;
         }
 	}
 	private States states;
@@ -23,7 +20,7 @@ public partial class WordProgressView : ContentView
 	{
 		InitializeComponent();
 
-		stateButtonMapping = new Dictionary<States, Button>
+		stateButtonMapping = new Dictionary<States, StatusButtonView>
 		{
 			{ States.New, NewBt },
 			{ States.Seen, SeenBt },
@@ -36,8 +33,8 @@ public partial class WordProgressView : ContentView
 	private void DisableAll()
 	{
 		foreach (var button in stateButtonMapping.Values)
-			button.Background = disabledBrush;
+			button.IsActive = false;
     }
 
-	private Dictionary<States, Button> stateButtonMapping;
+	private Dictionary<States, StatusButtonView> stateButtonMapping;
 }
