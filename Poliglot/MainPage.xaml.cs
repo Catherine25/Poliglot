@@ -152,7 +152,7 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        WordsAvailableBt.Text = wordsReadyForRepeating.Count().ToString();
+        WordsAvailableBt.Text = wordsReadyForRepeating.Count.ToString();
 
         var word = wordsReadyForRepeating.SelectRandom();
 
