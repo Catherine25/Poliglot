@@ -18,12 +18,11 @@ public class WordDbItem : DbItem
             return false;
 
         // if new
-        if (RepeatTime == null)
+        if (State == States.New)
             return true;
 
         var mapping = new Dictionary<States, DateTime>()
         {
-            { States.New, RepeatTime.Value.AddMinutes(1) }, // same as seen for now
             { States.Seen, RepeatTime.Value.AddMinutes(1) },
             { States.Studying, RepeatTime.Value.AddDays(1) },
             { States.Recognized, RepeatTime.Value.AddDays(7) },

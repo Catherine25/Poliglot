@@ -85,13 +85,12 @@ public partial class MainPage : ContentPage
         ShowNextWord();
     }
 
-    // todo
     private async void ImportButton_Clicked(object sender, EventArgs e)
     {
         var oldWords = await poliglotDatabase.GetItemsAsync<WordDbItem>();
         var oldSentences = await poliglotDatabase.GetItemsAsync<SentenceDbItem>();
 
-        var wordsInContext = await wordImporter.ImportInto(oldWords, oldSentences); //wordBank, blockedBank);
+        var wordsInContext = await wordImporter.ImportInto(oldWords, oldSentences);
         var itemsInContext = new List<WordInContext>();
 
         // save sentences
@@ -114,7 +113,7 @@ public partial class MainPage : ContentPage
             {
                 Word = wordInContext.word,
                 SentenceId = sentenceItem.Id,
-                State = States.Seen,
+                State = States.New,
             };
 
             await poliglotDatabase.SaveItemAsync(wordItem);

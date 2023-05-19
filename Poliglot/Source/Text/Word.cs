@@ -44,8 +44,8 @@ public class WordInContext
             // if recognised from the first attempt - mark as known
             if (RepeatTime == null)
                 State = States.Known;
-
-            State += 1;
+            else
+                State += 1;
         }
         else
             State = States.New;
