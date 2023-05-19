@@ -11,8 +11,6 @@ public class WordDbItem : DbItem
     public string Note { get; set; }
     public bool Blocked { get; set; }
 
-    public bool ReadyToForRepeating() =>
-       State != States.Known &&
-       (RepeatTime == null ||
-       DateTime.Now > RepeatTime);
+    public bool ReadyToForRepeating() => State != States.Known
+        && (RepeatTime == null || DateTime.Now > RepeatTime);
 }

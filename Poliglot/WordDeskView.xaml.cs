@@ -28,6 +28,7 @@ public partial class WordDeskView : ContentView
     private void BuildFromWord()
     {
         Debug.WriteLine($"Showing word '{word.Original}' in context '{word.Context}'");
+        Debug.WriteLine($"Repeat time: '{word.RepeatTime}'");
 
         var sentenceParts = ProduceWords(word.Context, word.Original).Select(s => s.Value);
 

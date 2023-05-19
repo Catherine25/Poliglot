@@ -114,7 +114,7 @@ public partial class MainPage : ContentPage
             {
                 Word = wordInContext.word,
                 SentenceId = sentenceItem.Id,
-                State = States.New,
+                State = States.Seen,
             };
 
             await poliglotDatabase.SaveItemAsync(wordItem);
@@ -127,8 +127,7 @@ public partial class MainPage : ContentPage
     {
         if (! await poliglotDatabase.Any<WordDbItem>())
         {
-            WordsAvailableBt.Text = "0";
-            WordStack.ShowNoWords();
+            ShowNoWords();
             return;
         }
 
@@ -147,8 +146,7 @@ public partial class MainPage : ContentPage
 
         if (!wordsReadyForRepeating.Any())
         {
-            WordsAvailableBt.Text = "0";
-            WordStack.ShowNoWords();
+            ShowNoWords();
             return;
         }
 
@@ -162,6 +160,12 @@ public partial class MainPage : ContentPage
         SentenceTransationEntry.Text = word.SentenceNote;
         NoteEntry.Text = word.Note;
         //StatisticsLabel.Text = statisticsBank.TodayEntry().WordCount.ToString();
+    }
+
+    private void ShowNoWords()
+    {
+        WordsAvailableBt.Text = "0";
+        WordStack.ShowNoWords();
     }
 }
 

@@ -38,6 +38,7 @@ public class PoliglotDatabase
 
         var words = await Database.Table<WordDbItem>().ToListAsync();
         Debug.WriteLine($"{words.Count} words loaded");
+        Debug.WriteLine($"With state 'New': {words.Count(x => x.State == States.New)}");
 
         var wordsToStudy = words.Where(w => w.ReadyToForRepeating()); // word can be studied
         Debug.WriteLine($"{wordsToStudy.Count()} words are ready for repeating");

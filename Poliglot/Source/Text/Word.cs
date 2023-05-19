@@ -41,6 +41,10 @@ public class WordInContext
     {
         if (correct)
         {
+            // if recognised from the first attempt - mark as known
+            if (RepeatTime == null)
+                State = States.Known;
+
             State += 1;
 
             if (State == States.Seen)
