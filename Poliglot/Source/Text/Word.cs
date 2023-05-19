@@ -46,19 +46,11 @@ public class WordInContext
                 State = States.Known;
 
             State += 1;
-
-            if (State == States.Seen)
-                RepeatTime = DateTime.Now.AddDays(1);
-            else if (State == States.Studying)
-                RepeatTime = DateTime.Now.AddDays(3);
-            else if (State == States.Recognized)
-                RepeatTime = DateTime.Now.AddDays(7);
         }
         else
-        {
             State = States.New;
-            RepeatTime = DateTime.UtcNow.AddMinutes(1);
-        }
+
+        RepeatTime = DateTime.UtcNow;
     }
 
     public static bool operator ==(WordInContext x, WordInContext y) => string.Equals(x?.Original, y?.Original);
