@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Poliglot"
              x:Class="Poliglot.WordProgressView">
     <HorizontalStackLayout>
-        <Button Text="Progress"/>
+        <Button Text="Progress:"/>
         <HorizontalStackLayout>
             <local:StatusButtonView x:Name="NewBt"/>
             <local:StatusButtonView x:Name="SeenBt"/>
