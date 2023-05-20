@@ -7,7 +7,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
             <RowDefinition/>
-            <RowDefinition/>
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
@@ -17,11 +16,14 @@
             <Button x:Name="WordsAvailableBt"/>
         </HorizontalStackLayout>
 
-        <local:WordDeskView x:Name="WordStack" Grid.Row="1" Grid.ColumnSpan="2" Margin="10"/>
-        <Entry x:Name="SentenceTransationEntry" Placeholder="Write sentence transation" FontSize="10" Grid.Row="2" Grid.ColumnSpan="2"/>
+        <VerticalStackLayout Grid.Row="1">
+            <local:WordDeskView x:Name="WordStack" Grid.ColumnSpan="2" Margin="10"/>
+            <Entry x:Name="SentenceTransationEntry" Placeholder="Write sentence transation" FontSize="10" Grid.ColumnSpan="2"/>
+        </VerticalStackLayout>
 
-        <Grid Grid.Row="3" Margin="25">
+        <Grid Grid.Row="2" Margin="25">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="*"/>
@@ -29,9 +31,10 @@
             </Grid.ColumnDefinitions>
 
             <Button x:Name="ImportButton" Text="Import Words" Grid.Column="0"/>
-            <Entry x:Name="NoteEntry" Placeholder="Write a note" Grid.Column="1"/>
-            <Button x:Name="BlockWordButton" Text="Block Word" Grid.Column="2"/>
-            <Button x:Name="BlockSentenceButton" Text="Block Sentence" Grid.Column="3"/>
+            <Button x:Name="CopySentenceButton" Text="Copy Sentence" Grid.Column="1"/>
+            <Entry x:Name="NoteEntry" Placeholder="Write a note" Grid.Column="2"/>
+            <Button x:Name="BlockWordButton" Text="Block Word" Grid.Column="3"/>
+            <Button x:Name="BlockSentenceButton" Text="Block Sentence" Grid.Column="4"/>
             <!--<Button x:Name="StatisticsLabel"/>-->
         </Grid>
     </Grid>

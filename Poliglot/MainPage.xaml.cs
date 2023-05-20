@@ -33,10 +33,16 @@ public partial class MainPage : ContentPage
         Appearing += MainPage_AppearingAsync;
 
         ImportButton.Clicked += ImportButton_Clicked;
+        CopySentenceButton.Clicked += CopySentenceButton_Clicked;
         SentenceTransationEntry.Completed += SentenceTransationEntry_Completed;
         NoteEntry.Completed += NoteEntry_Completed;
         BlockWordButton.Clicked += BlockWordButton_Clicked;
         BlockSentenceButton.Clicked += BlockSentenceButton_Clicked;
+    }
+
+    private void CopySentenceButton_Clicked(object sender, EventArgs e)
+    {
+        Clipboard.SetTextAsync(WordStack.Word.Context);
     }
 
     private void SentenceTransationEntry_Completed(object sender, EventArgs e)
