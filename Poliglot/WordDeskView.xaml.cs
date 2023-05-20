@@ -125,7 +125,6 @@ public partial class WordDeskView : ContentView
                     Text = item.contextWord,
                     HeightRequest = 50,
                     VerticalOptions = LayoutOptions.Center,
-                    BackgroundColor = Colors.BlueViolet.WithAlpha(0.5f)
                 };
 
                 Body.Add(label);
