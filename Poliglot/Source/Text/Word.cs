@@ -48,7 +48,7 @@ public class WordInContext
                 State += 1;
         }
         else
-            State = States.New;
+            State = States.Seen;
 
         RepeatTime = DateTime.UtcNow;
     }
