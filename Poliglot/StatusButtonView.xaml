@@ -3,7 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Poliglot.StatusButtonView">
     <Grid>
-        <Button x:Name="ActiveBt" Background="{StaticResource Primary}"/>
-        <Button x:Name="PassiveBt" Background="{StaticResource Secondary}"/>
+        <Button x:Name="ActiveBt"
+                Background="{StaticResource Primary}"
+                TextColor="{StaticResource Secondary}"/>
+        <Button x:Name="PassiveBt"
+                Background="{StaticResource Secondary}"
+                TextColor="{StaticResource Primary}"/>
     </Grid>
 </ContentView>

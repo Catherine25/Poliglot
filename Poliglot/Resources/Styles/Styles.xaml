@@ -109,7 +109,7 @@
     </Style>
 
     <Style TargetType="Entry">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Secondary}}" />
         <Setter Property="BackgroundColor" Value="{StaticResource Secondary}" />
         <Setter Property="FontFamily" Value="Consolas"/>
         <Setter Property="FontSize" Value="20" />
