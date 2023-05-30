@@ -5,12 +5,6 @@
              x:Class="Poliglot.WordProgressView">
     <HorizontalStackLayout>
         <Button Text="Progress:"/>
-        <HorizontalStackLayout>
-            <local:StatusButtonView x:Name="NewBt"/>
-            <local:StatusButtonView x:Name="SeenBt"/>
-            <local:StatusButtonView x:Name="StudyingBt"/>
-            <local:StatusButtonView x:Name="RecognizedBt"/>
-            <local:StatusButtonView x:Name="KnownBt"/>
-        </HorizontalStackLayout>
+        <HorizontalStackLayout x:Name="Stack"/>
     </HorizontalStackLayout>
 </ContentView>

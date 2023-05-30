@@ -20,15 +20,21 @@ public partial class WordProgressView : ContentView
 	{
 		InitializeComponent();
 
-		stateButtonMapping = new Dictionary<States, StatusButtonView>
-		{
-			{ States.New, NewBt },
-			{ States.Seen, SeenBt },
-			{ States.Studying, StudyingBt },
-			{ States.Recognized, RecognizedBt },
-			{ States.Known, KnownBt },
-		};
-	}
+		stateButtonMapping = new Dictionary<States, StatusButtonView>();
+
+		CreateButton(States.New, "New");
+		CreateButton(States.Seen, "Seen");
+		CreateButton(States.Studying, "Studying");
+		CreateButton(States.Recognized, "Recognized");
+		CreateButton(States.Known, "Known");
+    }
+
+	private void CreateButton(States state, string content)
+    {
+        var newBt = new StatusButtonView(content);
+        Stack.Add(newBt);
+        stateButtonMapping.Add(state, newBt);
+    }
 
 	private void DisableAll()
 	{
