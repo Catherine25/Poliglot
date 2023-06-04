@@ -59,6 +59,9 @@ public partial class WordDeskView : ContentView
             resultingMatches.AddRange(result);
         }
 
+        if (!studiedMatches.Any())
+            throw new WordProcessingException($"Error showing the word '{studiedWord}'");
+
         resultingMatches = PrependFirst(studiedMatches, text).ToList();
         resultingMatches = AppendLast(text, resultingMatches).ToList();
 
