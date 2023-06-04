@@ -40,7 +40,10 @@ public class PoliglotDatabase
         Debug.WriteLine($"{words.Count} words loaded");
         Debug.WriteLine($"With state 'New': {words.Count(x => x.State == States.New)}");
 
-        var wordsToStudy = words.Where(w => w.ReadyToForRepeating()); // word can be studied
+        var wordsNotBlocked = words.Where(w => !w.Blocked);
+        Debug.WriteLine($"{wordsNotBlocked.Count()} words are not blocked");
+
+        var wordsToStudy = wordsNotBlocked.Where(w => w.ReadyToForRepeating()); // word can be studied
         Debug.WriteLine($"{wordsToStudy.Count()} words are ready for repeating");
 
         var mostKnownWords = wordsToStudy.OrderByDescending(w => w.State); // first repeat most known
