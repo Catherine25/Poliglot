@@ -10,6 +10,9 @@ public partial class WordEntryView : ContentView
     private bool? answered;
     private bool hadMistake = false;
 
+    Animation correctAnimation;
+    Animation incorrectAnimation;
+
     public WordEntryView()
 	{
 		InitializeComponent();
@@ -32,6 +35,9 @@ public partial class WordEntryView : ContentView
         Body.IsEnabled = true;
 
         Body.Completed += Body_Completed;
+
+        correctAnimation = new Animation(v => Body.BackgroundColor = Colors.LightCyan, 1, 2);
+        incorrectAnimation = new Animation(v => Body.BackgroundColor = Colors.LightCoral, 1, 2);
     }
 
     private void Body_Completed(object sender, EventArgs e)
@@ -42,7 +48,7 @@ public partial class WordEntryView : ContentView
         }
         else
         {
-            var correct = string.Equals(word.Original, Body.Text, StringComparison.OrdinalIgnoreCase);
+            var correct = string.Equals(word.Original, (sender as Entry).Text, StringComparison.OrdinalIgnoreCase);
 
             if (!correct)
             {
@@ -53,9 +59,10 @@ public partial class WordEntryView : ContentView
 
             answered = correct;
 
-            Body.TextColor = correct
-                ? Colors.DarkCyan
-                : Colors.Coral;
+            if(correct)
+                correctAnimation.Commit(this, "SimpleAnimation", 16, 6000);
+            else
+                incorrectAnimation.Commit(this, "SimpleAnimation", 16, 6000);
         }
     }
 }
