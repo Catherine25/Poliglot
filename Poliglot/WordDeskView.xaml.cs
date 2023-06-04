@@ -124,7 +124,6 @@ public partial class WordDeskView : ContentView
                 {
                     Text = item.contextWord,
                     HeightRequest = 50,
-                    VerticalOptions = LayoutOptions.Center,
                 };
 
                 Body.Add(label);
