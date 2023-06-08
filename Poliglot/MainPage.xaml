@@ -15,6 +15,7 @@
             <Button Text="Words available:"/>
             <Button x:Name="WordsAvailableBt"/>
             <Button x:Name="StatisticsBt" Text="Statistics"/>
+            <Button x:Name="SettingsBt" Text="Settings"/>
         </HorizontalStackLayout>
 
         <VerticalStackLayout Grid.Row="1">
