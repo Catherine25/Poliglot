@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui.Storage;
+using Poliglot.Source.Configuration;
 using Poliglot.Source.Database;
 using Poliglot.Source.Database.Base;
 using Poliglot.Source.Extensions;
@@ -39,6 +40,15 @@ public partial class MainPage : ContentPage
         BlockWordButton.Clicked += BlockWordButton_Clicked;
         BlockSentenceButton.Clicked += BlockSentenceButton_Clicked;
         StatisticsBt.Clicked += StatisticsBt_Clicked;
+        SettingsBt.Clicked += SettingsBt_Clicked;
+    }
+
+    private void SettingsBt_Clicked(object sender, EventArgs e)
+    {
+        var primary = Settings.GetPrimaryColor().ToArgbHex();
+        var secondary = Settings.GetSecondaryColor().ToArgbHex();
+
+        DisplayAlert("Settings", $"Primary color: {primary}\nSecondary color: {secondary}", "OK");
     }
 
     private async void StatisticsBt_Clicked(object sender, EventArgs e)
