@@ -38,6 +38,13 @@ public partial class MainPage : ContentPage
         NoteEntry.Completed += NoteEntry_Completed;
         BlockWordButton.Clicked += BlockWordButton_Clicked;
         BlockSentenceButton.Clicked += BlockSentenceButton_Clicked;
+        StatisticsBt.Clicked += StatisticsBt_Clicked;
+    }
+
+    private async void StatisticsBt_Clicked(object sender, EventArgs e)
+    {
+        int count = await poliglotDatabase.GetWordsPracticedToday();
+        DisplayAlert("Statistics", $"Practiced today: {count} words", "OK");
     }
 
     private void CopySentenceButton_Clicked(object sender, EventArgs e)
