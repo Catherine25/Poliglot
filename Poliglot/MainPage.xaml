@@ -14,6 +14,7 @@
             <local:WordProgressView x:Name="WordProgress"/>
             <Button Text="Words available:"/>
             <Button x:Name="WordsAvailableBt"/>
+            <Button x:Name="StatisticsBt" Text="Statistics"/>
         </HorizontalStackLayout>
 
         <VerticalStackLayout Grid.Row="1">
@@ -35,7 +36,6 @@
             <Entry x:Name="NoteEntry" Placeholder="Write a note" Grid.Column="2"/>
             <Button x:Name="BlockWordButton" Text="Block Word" Grid.Column="3"/>
             <Button x:Name="BlockSentenceButton" Text="Block Sentence" Grid.Column="4"/>
-            <!--<Button x:Name="StatisticsLabel"/>-->
         </Grid>
     </Grid>
 </ContentPage>

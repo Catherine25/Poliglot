@@ -58,6 +58,17 @@ public class PoliglotDatabase
             .ToList();
     }
 
+    public async Task<int> GetWordsPracticedToday()
+    {
+        await Init();
+        var words = await Database.Table<WordDbItem>().ToListAsync();
+
+        return words
+            .Where(w => w.RepeatTime != null)
+            .Where(w => w.RepeatTime.Value.Date == DateTime.Today)
+            .Count();
+    }
+
     public async Task<List<T>> GetItemsAsync<T>() where T : DbItem, new()
     {
         await Init();
