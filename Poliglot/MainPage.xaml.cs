@@ -55,7 +55,7 @@ public partial class MainPage : ContentPage
         WordStack.Word.SentenceNote = text;
     }
 
-    private async void NoteEntry_Completed(object sender, EventArgs e)
+    private void NoteEntry_Completed(object sender, EventArgs e)
     {
         var text = NoteEntry.Text;
 
