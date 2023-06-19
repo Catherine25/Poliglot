@@ -3,40 +3,69 @@
 public class LongSentenceSplitter
 {
     public const int MaxSize = 100;
+    private readonly string _initialSentence;
+    private Node _node;
 
-    public IEnumerable<string> SplitSentence(string sentence, char character)
+    public LongSentenceSplitter(string initialSentence)
     {
-        if (CanContinue(sentence, character))
-            return new List<string> { sentence };
-
-        var parts = GetParts(sentence, character);
-
-        var result = new List<string>();
-
-        if (!string.IsNullOrEmpty(parts.first))
-            result.AddRange(SplitSentence(parts.first, character));
-
-        if (!string.IsNullOrEmpty(parts.second))
-            result.AddRange(SplitSentence(parts.second, character));
-
-        return result;
+        _initialSentence = initialSentence;
+        _node = new Node(_initialSentence);
     }
 
-    private bool CanContinue(string sentence, char character)
+    public IEnumerable<string> SplitSentenceBy(char character)
     {
-        return sentence.Length < MaxSize || !sentence.Contains(character);
+        _node.SplitBy(character);
+
+        return _node.Construct();
+    }
+}
+
+public class Node
+{
+    public const int MaxSize = 100;
+
+    public Node(string sentence)
+    {
+        Sentence = sentence;
     }
 
-    private (string first, string second) GetParts(string sentence, char character)
-    {
-        int index = sentence.IndexOf(character) + 1;
+    public string Sentence { get; set; }
+    public Node First { get; set; }
+    public Node Second { get; set; }
 
-        string first = sentence[..index];
+    public void SplitBy(char character)
+    {
+        if (Sentence?.Length < MaxSize)
+            return;
+
+        int index = Sentence.IndexOf(character) + 1;
+
+        string first = Sentence[..index];
 
         index++;
 
-        string second = sentence[index..];
+        if (index >= Sentence.Length)
+            return;
 
-        return (first, second);
+        string second = Sentence[index..];
+
+        First = new Node(first);
+        Second = new Node(second);
+        Sentence = null;
+
+        First.SplitBy(character);
+        Second.SplitBy(character);
+    }
+
+    public IEnumerable<string> Construct()
+    {
+        if (Sentence != null)
+            return new string[] { Sentence };
+
+        var list = new List<string>();
+        list.AddRange(First.Construct());
+        list.AddRange(Second.Construct());
+
+        return list;
     }
 }

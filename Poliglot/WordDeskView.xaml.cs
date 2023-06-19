@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
 using Poliglot.Source.Text;
+using Poliglot.Text;
 
 namespace Poliglot;
 
@@ -30,10 +30,10 @@ public partial class WordDeskView : ContentView
         Debug.WriteLine($"Showing word '{word.Original}' in context '{word.Context}'");
         Debug.WriteLine($"Repeat time: '{word.RepeatTime}'");
 
-        var sentenceParts = ProduceWords(word.Context, word.Original).Select(s => s.Value);
+        var targetWordExtractor = new TargetWordExtractor();
+        var sentenceParts = targetWordExtractor.ProduceWords(word.Context, word.Original).Select(s => s.Value);
 
-        var longSentenceSplitter = new LongSentenceSplitter();
-        var shortened = sentenceParts.SelectMany(s => longSentenceSplitter.SplitSentence(s, ','));
+        var shortened = SplitLongSentencesBy(sentenceParts, ',');
 
         var mappedWords = shortened
             .Select(w => (w, w == word.Original ? word : null));
@@ -43,78 +43,13 @@ public partial class WordDeskView : ContentView
         GenerateWordViewsForWord(mappedWords);
     }
 
-    private IEnumerable<MyMatch> ProduceWords(string text, string studiedWord)
+    private IEnumerable<string> SplitLongSentencesBy(IEnumerable<string> sentences, char character)
     {
-        var regex = new Regex("[a-zA-ZěĚšŠčČřŘžŽýÝáÁíÍéÉúÚůŮďĎťŤ]*");
-        MatchCollection matchCollection = regex.Matches(text);
+        var result = sentences.SelectMany(s => new LongSentenceSplitter(s).SplitSentenceBy(character));
 
-        var studiedMatches = matchCollection.Where(m => m.Value == studiedWord)
-            .Select(m => new MyMatch(m.Index, m.Length, m.Value)).ToList();
+        Debug.WriteLine("SplitLongSentencesBy(): " + result.Count());
 
-        var resultingMatches = studiedMatches.Where(m => m.Value == studiedWord).ToList();
-
-        for (int i = 0; i < studiedMatches.Count() - 1; i++)
-        {
-            var result = AddBetween(text, studiedMatches[i], studiedMatches[i + 1]);
-            resultingMatches.AddRange(result);
-        }
-
-        if (!studiedMatches.Any())
-            throw new WordProcessingException($"Error showing the word '{studiedWord}'");
-
-        resultingMatches = PrependFirst(studiedMatches, text).ToList();
-        resultingMatches = AppendLast(text, resultingMatches).ToList();
-
-        IEnumerable<string> extractedWords = matchCollection.Select(w => w.Value);
-
-        Debug.WriteLine($"extracted words: {string.Join(' ', extractedWords)}");
-
-        return resultingMatches;
-    }
-
-    private static IEnumerable<MyMatch> AddBetween(string text, MyMatch match1, MyMatch match2)
-    {
-        if (match1.Index == match2.Index)
-            return new List<MyMatch> { match1, match2 };
-
-        int start = match1.Index + match1.Length;
-        int end = match2.Index;
-
-        return new List<MyMatch> { match1, match2, new MyMatch(start, end, text[start..end]) };
-    }
-
-    private static IEnumerable<MyMatch> AppendLast(string text, IEnumerable<MyMatch> matches)
-    {
-        var lastMatch = matches.Last();
-
-        int newWordIndex = lastMatch.Index + lastMatch.Length;
-        int newWordLength = text.Length - newWordIndex;
-
-        if (newWordIndex != text.Length)
-        {
-            MyMatch match = new(
-                newWordIndex,
-                newWordLength,
-                text.Substring(newWordIndex, newWordLength)
-            );
-
-            matches = matches.Append(match);
-        }
-
-        return matches;
-    }
-
-    private IEnumerable<MyMatch> PrependFirst(IEnumerable<MyMatch> matches, string text)
-    {
-        var firstMatch = matches.First();
-
-        if (firstMatch.Index != 0)
-        {
-            MyMatch element = new(0, firstMatch.Index, text.Substring(0, firstMatch.Index));
-            matches = matches.Prepend(element);
-        }
-
-        return matches;
+        return result;
     }
 
     public void GenerateWordViewsForWord(IEnumerable<(string contextWord, WordInContext studiedWord)> mappedWords)
@@ -160,18 +95,4 @@ public partial class WordDeskView : ContentView
     }
 
     public void Clear() => Body.Clear();
-}
-
-public class MyMatch
-{
-    public MyMatch(int index, int length, string value)
-    {
-        Index = index;
-        Length = length;
-        Value = value;
-    }
-
-    public int Index { get; set; }
-    public int Length { get; set; }
-    public string Value { get; set; }
 }
