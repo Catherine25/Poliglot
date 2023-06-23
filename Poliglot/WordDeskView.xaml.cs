@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
+using Library;
 using Poliglot.Source.Text;
-using Poliglot.Text;
 
 namespace Poliglot;
 
@@ -31,9 +31,9 @@ public partial class WordDeskView : ContentView
         Debug.WriteLine($"Repeat time: '{word.RepeatTime}'");
 
         var targetWordExtractor = new TargetWordExtractor();
-        var sentenceParts = targetWordExtractor.ProduceWords(word.Context, word.Original).Select(s => s.Value);
+        var sentenceParts = targetWordExtractor.ProduceWords(word.Context, word.Original);
 
-        var shortened = SplitLongSentencesBy(sentenceParts, ',');
+        var shortened = SplitLongSentencesBy(sentenceParts, Delimeters.Comma);
 
         var mappedWords = shortened
             .Select(w => (w, w == word.Original ? word : null));
@@ -45,7 +45,7 @@ public partial class WordDeskView : ContentView
 
     private IEnumerable<string> SplitLongSentencesBy(IEnumerable<string> sentences, char character)
     {
-        var result = sentences.SelectMany(s => new LongSentenceSplitter(s).SplitSentenceBy(character));
+        var result = sentences.SelectMany(s => new LongSentenceSplitter(s, 100).SplitSentenceBy(character));
 
         Debug.WriteLine("SplitLongSentencesBy(): " + result.Count());
 
