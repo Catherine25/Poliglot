@@ -1,4 +1,4 @@
-﻿namespace Poliglot;
+﻿namespace Library;
 
 public class WordProcessingException : Exception
 {
