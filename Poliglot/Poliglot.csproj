@@ -78,6 +78,9 @@
 	  <MauiXaml Update="StatusButtonView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="TopMenu.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="WordDeskView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -39,11 +39,12 @@ public partial class MainPage : ContentPage
         NoteEntry.Completed += NoteEntry_Completed;
         BlockWordButton.Clicked += BlockWordButton_Clicked;
         BlockSentenceButton.Clicked += BlockSentenceButton_Clicked;
-        StatisticsBt.Clicked += StatisticsBt_Clicked;
-        SettingsBt.Clicked += SettingsBt_Clicked;
+
+        TopMenuView.RequestDisplayAlert += TopMenuView_RequestDisplayAlert;
+        //StatisticsBt.Clicked += StatisticsBt_Clicked;
     }
 
-    private void SettingsBt_Clicked(object sender, EventArgs e)
+    private void TopMenuView_RequestDisplayAlert()
     {
         var primary = Settings.GetPrimaryColor().ToArgbHex();
         var secondary = Settings.GetSecondaryColor().ToArgbHex();
@@ -97,8 +98,6 @@ public partial class MainPage : ContentPage
     private void WordStack_WordCompleted(bool completed)
     {
         WordStack.Word.Answered(completed);
-
-        //StatisticsLabel.Text = statisticsBank.WordCompleted().ToString();
 
         ShowNextWord();
     }
@@ -172,21 +171,22 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        WordsAvailableBt.Text = wordsReadyForRepeating.Count.ToString();
+        //WordsAvailableBt.Text = wordsReadyForRepeating.Count.ToString();
 
         var word = wordsReadyForRepeating.SelectRandom();
 
-        WordProgress.State = word.State;
+        //WordProgress.State = word.State;
         WordStack.Word = word;
 
         SentenceTransationEntry.Text = word.SentenceNote;
         NoteEntry.Text = word.Note;
-        //StatisticsLabel.Text = statisticsBank.TodayEntry().WordCount.ToString();
+
+        TopMenuView.SetStatus(word.State);
     }
 
     private void ShowNoWords()
     {
-        WordsAvailableBt.Text = "0";
+        //WordsAvailableBt.Text = "0";
         WordStack.ShowNoWords();
     }
 }

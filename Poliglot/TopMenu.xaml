@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Poliglot.TopMenu">
+    <Grid>
+        <HorizontalStackLayout>
+            <Label VerticalOptions="CenterAndExpand" Margin="0,5,0,0" Text="Progress:"/>
+            <Button x:Name="New" Text="New"/>
+            <Button x:Name="Seen" Text="Seen"/>
+            <Button x:Name="Studying" Text="Studying"/>
+            <Button x:Name="Recognized" Text="Recognized"/>
+            <Button x:Name="Known" Text="Known"/>
+        </HorizontalStackLayout>
+        <Button x:Name="SettingsBt" Text="Settings" Grid.Column="1"/>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+    </Grid>
+</ContentView>
