@@ -1,13 +1,13 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
-namespace Poliglot.Text;
+namespace Library;
 
 public class TargetWordExtractor
 {
     private const string CzechRegex = "[a-zA-ZěĚšŠčČřŘžŽýÝáÁíÍéÉúÚůŮďĎťŤ]*";
 
-    public IEnumerable<MyMatch> ProduceWords(string text, string studiedWord)
+    public IEnumerable<string> ProduceWords(string text, string studiedWord)
     {
         Regex regex = new(CzechRegex);
         MatchCollection matchCollection = regex.Matches(text);
@@ -33,7 +33,7 @@ public class TargetWordExtractor
 
         Debug.WriteLine($"extracted words: {string.Join(' ', extractedWords)}");
 
-        return resultingMatches;
+        return resultingMatches.Select(s => s.Value);
     }
 
     private static IEnumerable<MyMatch> AddBetween(string text, MyMatch match1, MyMatch match2)
